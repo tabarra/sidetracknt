@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Timer</title>
+    <title>Sidetrackn't</title>
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Focus Timer" />
     <meta property="og:description" content="A simple countdown timer to help you stay focused." />
-    <meta property="og:image" content="./preview.png" />
-    <!-- <meta property="og:url" content="http://yourwebsite.com" /> -->
+    <meta property="og:image" content="https://sidetracknt.vercel.app/preview.png" />
+    <meta property="og:url" content="https://sidetracknt.vercel.app/" />
     <meta name="author" content="https://github.com/tabarra" />
 
     <link rel="icon" type="image/svg+xml" href="./favicon_red.svg" id="favicon" />
@@ -119,7 +119,7 @@
             const timeString = formatTime(countdownValue);
             timerDisplay.textContent = timeString;
             const titleTime = countdownValue === countdownDuration ? 'STOPPED' : timeString;
-            document.title = `Focus Timer: ${titleTime}`;
+            document.title = `Sidetrackn't: ${titleTime}`;
         };
 
         const timerDone = () => {
