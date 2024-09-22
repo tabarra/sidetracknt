@@ -8,7 +8,7 @@
 Tired of getting distracted or sidetracked on your tasks? Well me too, that's why I created this project (which by itself was a sidetrack).  
 This "app" (just html lol) will play a ping + notification every X minutes to remind you to stay on track!
 
-# Link: [sidetracknt.vercel.app](sidetracknt.vercel.app)
+# Link: [sidetracknt.vercel.app](https://sidetracknt.vercel.app/)
 
 ## Audio Messages:
 - Quick reminder: consider prioritization and what is "good enough for the time being".
