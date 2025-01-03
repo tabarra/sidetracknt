@@ -39,7 +39,7 @@
 
                 <div class="w-full">
                     <label for="durationSelect" class="block text-sm mb-2">
-                        Select Time Duration:
+                        Time Duration:
                     </label>
                     <select id="durationSelect"
                         class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-4 py-2">
@@ -53,11 +53,22 @@
                         <option value="3600">60 minutes</option>
                     </select>
                 </div>
+                <div class="w-full">
+                    <label for="durationSelect" class="block text-sm mb-2">
+                        Audio Volume:
+                    </label>
+                    <select id="volumeSelect"
+                        class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-4 py-2">
+                        <option value="1">100%</option>
+                        <option value="0.75" selected>75%</option>
+                        <option value="0.5">50%</option>
+                    </select>
+                </div>
             </div>
 
             <div class="flex gap-4 justify-center">
                 <button id="startStopBtn"
-                    class="w-32 px-6 py-3 rounded-lg border text-whitex font-semibold tracking-wider" />
+                    class="w-32 px-6 py-3 rounded-lg border font-semibold tracking-wider" />
             </div>
         </div>
 
@@ -99,6 +110,7 @@
 
         const favicon = document.getElementById('favicon');
         const durationSelect = document.getElementById('durationSelect');
+        const volumeSelect = document.getElementById('volumeSelect');
         const timerDisplay = document.getElementById('timerDisplay');
         const startStopBtn = document.getElementById('startStopBtn');
         const startBtnClasses = ['text-green-950', 'hover:text-green-50', 'border-green-600', 'bg-green-600/50', 'hover:bg-green-700'];
@@ -125,10 +137,16 @@
             document.title = `ST: ${titleTime}`;
         };
 
+        const playSound = (sound) => {
+            const volume = parseFloat(volumeSelect.value);
+            sound.volume = volume;
+            sound.play();
+        };
+
         const timerDone = () => {
-            pingSounds.notification.play();
+            playSound(pingSounds.notification);
             setTimeout(() => {
-                pickRandomMessageSound().play();
+                playSound(pickRandomMessageSound());
             }, 750);
         };
 
@@ -144,13 +162,13 @@
         const startTimer = () => {
             countdownValue = countdownDuration;
             updateTimerText();
-            pingSounds.start.play();
+            playSound(pingSounds.start);
             timer = setInterval(timerTick, 1000);
         };
 
         const stopTimer = () => {
             clearInterval(timer);
-            pingSounds.stop.play();
+            playSound(pingSounds.stop);
             countdownValue = countdownDuration;
             updateTimerText();
         };
@@ -191,6 +209,11 @@
         startStopBtn.textContent = 'Start';
         startStopBtn.classList.add(...startBtnClasses);
         updateTimerText(); 
+
+        //on load
+        document.addEventListener('DOMContentLoaded', () => {
+            startStopBtn.focus();
+        });
     </script>
 </body>
 
