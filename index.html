@@ -16,19 +16,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-color: #F6F4E5;
+            background-color: #ffd292;
             font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
 
 <body class="pt-4 md:pt-12 xl:pt-44">
-    <div class="flex flex-col gap-4 justify-center items-center">
-        <img src="./preview.png" alt="sidetrackn't" class="h-48">
+    <div class="flex flex-col gap-4 justify-center items-center antialiasing">
+        <img src="./preview.png" alt="sidetrackn't" class="h-48 mix-blend-multiply" style="filter: blur(0.5px) contrast(1.5);">
 
         <div class="max-w-md w-full p-8 rounded-xl shadow-xl border border-amber-600 bg-amber-50 text-stone-700">
-            <div class="text-center mb-6">
-                When the interval ends, you will receive an audio reminder to stay focused.
+            <div class="text-center mb-6 text-sm text-stone-500 font-light italic tracking-wider">
+                A recurring timer that to remind you to stay focused.
             </div>
 
             <div class="flex flex-col items-center space-y-4 mb-6">
@@ -37,33 +37,42 @@
                     00:00
                 </div>
 
-                <div class="w-full">
-                    <label for="durationSelect" class="block text-sm mb-2">
-                        Time Duration:
-                    </label>
-                    <select id="durationSelect"
-                        class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-4 py-2">
-                        <!-- <option value="10">10 seconds</option> -->
-                        <option value="300">5 minutes</option>
-                        <option value="600">10 minutes</option>
-                        <option value="900">15 minutes</option>
-                        <option value="1200">20 minutes</option>
-                        <option value="1800">30 minutes</option>
-                        <option value="2700">45 minutes</option>
-                        <option value="3600">60 minutes</option>
-                    </select>
-                </div>
-                <div class="w-full">
-                    <label for="durationSelect" class="block text-sm mb-2">
-                        Audio Volume:
-                    </label>
-                    <select id="volumeSelect"
-                        class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-4 py-2">
-                        <option value="1">100%</option>
-                        <option value="0.75">75%</option>
-                        <option value="0.5" selected>50%</option>
-                        <option value="0.25">25%</option>
-                    </select>
+                <div class="grid grid-cols-3 gap-3 w-full">
+                    <div>
+                        <label for="durationSelect" class="block text-sm mb-2">Duration:</label>
+                        <select id="durationSelect"
+                            class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-3 py-2">
+                            <option value="60">&nbsp;1 min</option>
+                            <option value="120">&nbsp;2 mins</option>
+                            <option value="300">&nbsp;5 mins</option>
+                            <option value="600" selected>10 mins</option>
+                            <option value="900">15 mins</option>
+                            <option value="1200">20 mins</option>
+                            <option value="1800">30 mins</option>
+                            <option value="2700">45 mins</option>
+                            <option value="3600">60 mins</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="volumeSelect" class="block text-sm mb-2">Volume:</label>
+                        <select id="volumeSelect"
+                            class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-3 py-2">
+                            <option value="1">100%</option>
+                            <option value="0.75">75%</option>
+                            <option value="0.5">50%</option>
+                            <option value="0.25" selected>25%</option>
+                            <option value="0.15">15%</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="voiceSelect" class="block text-sm mb-2">Frequency:</label>
+                        <select id="voiceSelect"
+                            class="w-full bg-amber-950/25 text-amber-950 border-none rounded-md disabled:bg-amber-950/10 cursor-pointer disabled:cursor-not-allowed px-3 py-2">
+                            <option value="always" selected>Always</option>
+                            <option value="sometimes">Half</option>
+                            <option value="never">Never</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -109,18 +118,40 @@
             new Audio('./sounds/message_alisson11.mp3'),
         ];
 
+        const storageKeys = {
+            duration: 'sidetracknt:duration',
+            volume: 'sidetracknt:volume',
+            voice: 'sidetracknt:voice',
+        };
+
         const favicon = document.getElementById('favicon');
         const durationSelect = document.getElementById('durationSelect');
         const volumeSelect = document.getElementById('volumeSelect');
+        const voiceSelect = document.getElementById('voiceSelect');
         const timerDisplay = document.getElementById('timerDisplay');
         const startStopBtn = document.getElementById('startStopBtn');
         const startBtnClasses = ['text-green-950', 'hover:text-green-50', 'border-green-600', 'bg-green-600/50', 'hover:bg-green-700'];
         const stopBtnClasses = ['text-red-950', 'hover:text-red-50', 'border-red-600', 'bg-red-600/50', 'hover:bg-red-700'];
 
+        // Restore saved preferences
+        const savedDuration = localStorage.getItem(storageKeys.duration);
+        if (savedDuration && durationSelect.querySelector(`option[value="${savedDuration}"]`)) {
+            durationSelect.value = savedDuration;
+        }
+        const savedVolume = localStorage.getItem(storageKeys.volume);
+        if (savedVolume && volumeSelect.querySelector(`option[value="${savedVolume}"]`)) {
+            volumeSelect.value = savedVolume;
+        }
+        const savedVoice = localStorage.getItem(storageKeys.voice);
+        if (savedVoice && voiceSelect.querySelector(`option[value="${savedVoice}"]`)) {
+            voiceSelect.value = savedVoice;
+        }
+
         let timer;
         let countdownDuration = parseInt(durationSelect.value);
         let countdownValue = countdownDuration;
         let isRunning = false;
+        let doneCount = 0;
 
         //Helpers
         const pickRandomMessageSound = () => {
@@ -146,9 +177,14 @@
 
         const timerDone = () => {
             playSound(pingSounds.notification);
-            setTimeout(() => {
-                playSound(pickRandomMessageSound());
-            }, 750);
+            const voice = voiceSelect.value;
+            const shouldPlayVoice = voice === 'always' || (voice === 'sometimes' && doneCount % 2 === 0);
+            if (shouldPlayVoice) {
+                setTimeout(() => {
+                    playSound(pickRandomMessageSound());
+                }, 750);
+            }
+            doneCount++;
         };
 
         const timerTick = () => {
@@ -171,6 +207,7 @@
             clearInterval(timer);
             playSound(pingSounds.stop);
             countdownValue = countdownDuration;
+            doneCount = 0;
             updateTimerText();
         };
 
@@ -204,6 +241,15 @@
                 countdownValue = countdownDuration;
                 updateTimerText();
             }
+            localStorage.setItem(storageKeys.duration, durationSelect.value);
+        });
+
+        volumeSelect.addEventListener('change', () => {
+            localStorage.setItem(storageKeys.volume, volumeSelect.value);
+        });
+
+        voiceSelect.addEventListener('change', () => {
+            localStorage.setItem(storageKeys.voice, voiceSelect.value);
         });
 
         //initial title setup
